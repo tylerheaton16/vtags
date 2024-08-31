@@ -54,7 +54,7 @@ def offline_func_help(Print = False):
     help_str_list.append('offline call exp: ')
     help_str_list.append('    "vtags \'list( my_cpu )\'" # used to list all support function! ' )
     help_str_list.append('    "vtags -db ~/design/vtags_db \'mtopo( my_cpu )\'" # used specified vtags.db to get module topo!' )
-    if Print: 
+    if Print:
         for l in help_str_list: print(l)
     return help_str_list
 
@@ -215,7 +215,7 @@ def mtopo(module_name, depth = None, mask = 0, space = None):
         print('Error: no vtags.db found !')
         return
     if depth == None:
-        print "Note: not set depth default == 1 !"
+        print("Note: not set depth default == 1 !")
         depth = 1
     else:
         depth = int(depth)

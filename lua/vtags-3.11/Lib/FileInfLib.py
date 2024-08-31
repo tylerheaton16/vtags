@@ -406,11 +406,11 @@ def add_to_inline_file_db( file_inf ):
 
 def remove_from_offline_file_db(file_inf):
 
-    HasModifyOffLineModulePathDic      = False   
-    HasModifyOffLineFileInfoDic        = False 
-    HasModifyOffLineMacroInfDic        = False 
-    HasModifyOffLineFatherInstListDic  = False       
-    HasModifyOffLineChildModuleListDic = False       
+    HasModifyOffLineModulePathDic      = False
+    HasModifyOffLineFileInfoDic        = False
+    HasModifyOffLineMacroInfDic        = False
+    HasModifyOffLineFatherInstListDic  = False
+    HasModifyOffLineChildModuleListDic = False
 
     onload_G_OffLineFileInfoDic()
     onload_G_OffLineModulePathDic()
@@ -455,9 +455,9 @@ def remove_from_offline_file_db(file_inf):
     return
 
 def add_to_offline_file_db(path, serialize_file_name):
-    HasModifyOffLineModulePathDic      = False   
+    HasModifyOffLineModulePathDic      = False
     HasModifyOffLineFileInfoDic        = False
-    HasModifyOffLineMacroInfDic        = False 
+    HasModifyOffLineMacroInfDic        = False
     HasModifyOffLineFatherInstListDic  = False
     HasModifyOffLineChildModuleListDic = False
 
@@ -467,9 +467,9 @@ def add_to_offline_file_db(path, serialize_file_name):
     os.system("rm -rf "+ ser_path)
     assert( not os.path.exists(ser_path) )
     # do passer
-    Parser.parser_from_file_list(G["FileListInf"]["DefineList"], 
-        G["FileListInf"]["IncdirList"], 
-        [ (path,serialize_file_name) ], 
+    Parser.parser_from_file_list(G["FileListInf"]["DefineList"],
+        G["FileListInf"]["IncdirList"],
+        [ (path,serialize_file_name) ],
         G['RunLogPath'], 'tmp' )
     # try load parser result
     new_file_inf = load_python_inf( ser_path )
@@ -485,7 +485,7 @@ def add_to_offline_file_db(path, serialize_file_name):
     onload_G_OffLineChildModuleListDic()
     # add to OffLineFileInfoDic
     # need Struct Sync to C-Parser
-    G["OffLineFileInfoDic"][file_path] = {"last_modify_time": new_file_inf["file_state"]["last_modify_time"], 
+    G["OffLineFileInfoDic"][file_path] = {"last_modify_time": new_file_inf["file_state"]["last_modify_time"],
         "serialize_file_name": serialize_file_name}
     HasModifyOffLineFileInfoDic = True
     # add to OffLineMacroInfDic
@@ -544,7 +544,7 @@ def loading_file_inf(path, add_inline = True):
         if check_inf_valid(path, G["InLineFileInfDic"][path]["file_state"]['last_modify_time']):
             return G["InLineFileInfDic"][path]
         del G["InLineFileInfDic"][path]
-    # generate new file inf 
+    # generate new file inf
     onload_G_OffLineFileInfoDic()
     serialize_file_name = ''
     if path in G["OffLineFileInfoDic"]:
@@ -673,7 +673,7 @@ def get_father_inst_list( module_name ):
     if module_name in G['OffLineFatherInstListDic']:
         file_list = set( G['OffLineFatherInstListDic'][module_name] )
         for f in file_list:
-            if refresh_file_info(f): 
+            if refresh_file_info(f):
                 continue
             del G['OffLineFatherInstListDic'][module_name][f]
     # 3. merge father inst
@@ -825,7 +825,7 @@ def recursive_search_all_deisgn_file_smart(dir_path):
         for i, p in enumerate(new_found_design_postfix):
             print("  %-3d : '.%s'"%(i,p))
         choise_postfix_idxs = []
-        choise = raw_input("Add to design ('0 ... %d' or 'Entry to skip') : "%(len(new_found_design_postfix)-1))
+        choise = input("Add to design ('0 ... %d' or 'Entry to skip') : "%(len(new_found_design_postfix)-1))
         while 1:
             choise = choise.strip()
             if not choise:
@@ -835,7 +835,7 @@ def recursive_search_all_deisgn_file_smart(dir_path):
                 assert( min(choise_postfix_idxs) >= 0 and max(choise_postfix_idxs) < len(new_found_design_postfix) )
                 break
             except:
-                choise = raw_input("illegal input try again ('0 ... %d' or 'Entry to skip') : ")
+                choise = input("illegal input try again ('0 ... %d' or 'Entry to skip') : ")
                 continue
         for idx in choise_postfix_idxs:
             postfix = new_found_design_postfix[idx]
@@ -862,7 +862,7 @@ def parser_vcs_file_list(vcs_file_list):
     design_list       = []
     design_set        = set()
     vtags_incdir_list = []
-    passed_file_list  = set() # in case filelist cyclic  
+    passed_file_list  = set() # in case filelist cyclic
     i = 0
     while(i < len(lines)):
         l = lines[i].strip()
@@ -897,8 +897,8 @@ def parser_vcs_file_list(vcs_file_list):
                 lines     = lines[:i] + new_lines + lines[i:]
             else:
                 print("-f '%s' - not exists !"%(path))
-        #-v filename : Specifies a Verilog library file. VCS looks in this file for module and UDP 
-        #   definitions for the module and UDP instances that VCS found in your source code but for which it did not 
+        #-v filename : Specifies a Verilog library file. VCS looks in this file for module and UDP
+        #   definitions for the module and UDP instances that VCS found in your source code but for which it did not
         #   find the corresponding module or UDP definitions in your source code.
         find_filepath = re.findall('-v\s+(\S+)', l)
         for path in find_filepath:
@@ -929,7 +929,7 @@ def parser_vcs_file_list(vcs_file_list):
                         design_set.add(r_f)
             else:
                 print("+vtags_incdir+'%s' not a dir !"%(dir_path))
-    return { "define_pair_list"   : define_pair_list     
+    return { "define_pair_list"   : define_pair_list
             ,"incdir_list"        : incdir_list
             ,"design_list"        : design_list
             ,"vtags_incdir_list"  : vtags_incdir_list }
