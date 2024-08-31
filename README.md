@@ -12,7 +12,7 @@ Just using this with my own modifications (i.e. to work with python3 etc)
 alias vtags='usr/bin/python3 $HOME/.local/share/nvim/lazy/vtags/lua/vtags-3.11/vtags.py
 ```
 
-### 2. **Add vtags to *.lua file**
+### 2. Add vtags to *.lua file
 
 ```lua
 {
