@@ -1,5 +1,4 @@
--- Create vtags keybinds. This is pretty clanky compared to other plugins
-
+-- Overriding Keybinds
 local vlog_group = vim.api.nvim_create_augroup("verilog_key_bindings", {})
 
 function vlog_bind(cmd, augroup)
