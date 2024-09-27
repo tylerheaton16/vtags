@@ -42,7 +42,7 @@ vim.cmd [[source $HOME/dotfiles/verilog_emacsauto.vim]]
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "*.sv", "*.v" },
     callback = function()
-        local handle = io.popen("python --version")
+        local handle = io.popen("python3 --version")
 
         if handle == nil then
             -- Send a notification if the command fails to execute
@@ -58,6 +58,5 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
             vim.notify("Python 3 is not installed for vtags! Please install Python 3 to continue.", vim.log.levels.ERROR)
             return
         end
-        vim.cmd [[source $HOME/.vtags-3.01/vtags_vim_api.vim]]
     end,
 })
