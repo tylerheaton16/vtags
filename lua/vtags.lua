@@ -58,5 +58,6 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
             vim.notify("Python 3 is not installed for vtags! Please install Python 3 to continue.", vim.log.levels.ERROR)
             return
         end
+        vim.cmd [[source $HOME/.vtags-3.01/vtags_vim_api.vim]]
     end,
 })
