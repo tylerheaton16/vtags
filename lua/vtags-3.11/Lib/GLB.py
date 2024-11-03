@@ -40,7 +40,7 @@ from Lib.ExceptionLib import *
 #-------------------------------------------------------------------------------
 def get_install_path():
     for path in sys.path:
-        m_path = re.match(r'(?P<i_path>.*(^|\W)vtags-[^/]*)', path)
+        m_path = re.match('(?P<i_path>.*(^|r'\W')vtags-[^/]*)', path)
         if m_path:
             return m_path.group('i_path')
     print("Error: can not found vtags install directory at env path, please vtags-x.xx(x should be digit (0-9)!, cur env path: %s"%(path))
@@ -55,12 +55,12 @@ def del_old_logs(vtags_db_folder_path):
     ls_a_f = [ f.strip('\n') for f in os.popen('ls -a ' + vtags_db_folder_path).readlines() ]
     used_log_index = set()
     for f in ls_a_f:
-        match_swp = re.match(r'\.(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?\.swp',f)
+        match_swp = re.match('\.(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?\.swp',f)
         if match_swp:
             used_log_index.add(int(match_swp.group('idx')))
     ls_f   = [ f.strip('\n') for f in os.popen('ls ' + vtags_db_folder_path).readlines() ]
     for f in ls_f:
-        match_idx = re.match(r'(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?', f)
+        match_idx = re.match('(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?', f)
         if not match_idx:
             continue
         cur_index = int(match_idx.group('idx'))
