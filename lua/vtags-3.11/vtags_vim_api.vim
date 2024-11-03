@@ -76,7 +76,7 @@ endif
 endfunction
 
 "vi_HDLTags_begin-----------------------------------
-""call VimPythonExtend()
+call VimPythonExtend()
 ""if s:vtags_active == 1
 ""    if has('python')
 ""        map gi                   :py  try_go_into_submodule()           <CR>
