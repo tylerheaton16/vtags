@@ -76,44 +76,44 @@ endif
 endfunction
 
 "vi_HDLTags_begin-----------------------------------
-call VimPythonExtend()
-if s:vtags_active == 1
-    if has('python')
-        map gi                   :py  try_go_into_submodule()           <CR>
-        map gu                   :py  try_go_upper_module()             <CR>
-        map mt                   :py  try_print_module_trace()          <CR>
-        map ct                   :py  clear_trace()                     <CR>
-        map <Space><Left>        :py  try_trace_signal_sources()        <CR>
-        map <Space><Right>       :py  try_trace_signal_destinations()   <CR>
-        map <Space><Down>        :py  try_roll_back()                   <CR>
-        map <Space><Up>          :py  try_go_forward()                  <CR>
-        map <Space>v             :py  try_show_frame()                  <CR>
-        map <Space>c             :py  try_add_check_point()             <CR>
-        map <Space>b             :py  try_add_base_module()             <CR>
-        map <Space>              :py  try_space_operation()             <CR>
-        "map <Space>h             :py  try_hold_current_win()            <CR>
-        "map <Space>d             :py  try_del_operation()               <CR>
-        map <Space>s             :py  try_save_env_snapshort()          <CR>
-        map <Space>r             :py  try_reload_env_snapshort()        <CR>
-        "map <Space>q             :py  try_close_all_windows()           <CR>
-    elseif has('python3')
-        map gi                   :py3 try_go_into_submodule()           <CR>
-        map gu                   :py3 try_go_upper_module()             <CR>
-        map mt                   :py3 try_print_module_trace()          <CR>
-        map ct                   :py3 clear_trace()                     <CR>
-        map <Space><Left>        :py3 try_trace_signal_sources()        <CR>
-        map <Space><Right>       :py3 try_trace_signal_destinations()   <CR>
-        map <Space><Down>        :py3 try_roll_back()                   <CR>
-        map <Space><Up>          :py3 try_go_forward()                  <CR>
-        map <Space>v             :py3 try_show_frame()                  <CR>
-        map <Space>c             :py3 try_add_check_point()             <CR>
-        map <Space>b             :py3 try_add_base_module()             <CR>
-        map <Space>              :py3 try_space_operation()             <CR>
-        "map <Space>h             :py3 try_hold_current_win()            <CR>
-        "map <Space>d             :py3 try_del_operation()               <CR>
-        map <Space>s             :py3 try_save_env_snapshort()          <CR>
-        map <Space>r             :py3 try_reload_env_snapshort()        <CR>
-        "map <Space>q             :py3 try_close_all_windows()           <CR>
-    endif
-endif
+""call VimPythonExtend()
+""if s:vtags_active == 1
+""    if has('python')
+""        map gi                   :py  try_go_into_submodule()           <CR>
+""        map gu                   :py  try_go_upper_module()             <CR>
+""        map mt                   :py  try_print_module_trace()          <CR>
+""        map ct                   :py  clear_trace()                     <CR>
+""        map <Space><Left>        :py  try_trace_signal_sources()        <CR>
+""        map <Space><Right>       :py  try_trace_signal_destinations()   <CR>
+""        map <Space><Down>        :py  try_roll_back()                   <CR>
+""        map <Space><Up>          :py  try_go_forward()                  <CR>
+""        map <Space>v             :py  try_show_frame()                  <CR>
+""        map <Space>c             :py  try_add_check_point()             <CR>
+""        map <Space>b             :py  try_add_base_module()             <CR>
+""        map <Space>              :py  try_space_operation()             <CR>
+""        "map <Space>h             :py  try_hold_current_win()            <CR>
+""        "map <Space>d             :py  try_del_operation()               <CR>
+""        map <Space>s             :py  try_save_env_snapshort()          <CR>
+""        map <Space>r             :py  try_reload_env_snapshort()        <CR>
+""        "map <Space>q             :py  try_close_all_windows()           <CR>
+""    elseif has('python3')
+""        map gi                   :py3 try_go_into_submodule()           <CR>
+""        map gu                   :py3 try_go_upper_module()             <CR>
+""        map mt                   :py3 try_print_module_trace()          <CR>
+""        map ct                   :py3 clear_trace()                     <CR>
+""        map <Space><Left>        :py3 try_trace_signal_sources()        <CR>
+""        map <Space><Right>       :py3 try_trace_signal_destinations()   <CR>
+""        map <Space><Down>        :py3 try_roll_back()                   <CR>
+""        map <Space><Up>          :py3 try_go_forward()                  <CR>
+""        map <Space>v             :py3 try_show_frame()                  <CR>
+""        map <Space>c             :py3 try_add_check_point()             <CR>
+""        map <Space>b             :py3 try_add_base_module()             <CR>
+""        map <Space>              :py3 try_space_operation()             <CR>
+""        "map <Space>h             :py3 try_hold_current_win()            <CR>
+""        "map <Space>d             :py3 try_del_operation()               <CR>
+""        map <Space>s             :py3 try_save_env_snapshort()          <CR>
+""        map <Space>r             :py3 try_reload_env_snapshort()        <CR>
+""        "map <Space>q             :py3 try_close_all_windows()           <CR>
+""    endif
+""endif
 "vi_HDLTags_end-------------------------------------
