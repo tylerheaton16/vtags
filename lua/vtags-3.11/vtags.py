@@ -59,7 +59,7 @@ except:
 #-------------------------------------------------------------------------------
 import OfflineLib.OfflineFuncLib as OfflineFuncLib
 parm_str = ' '.join(sys.argv[1:])
-if re.search(r'\(.*\)' , parm_str):
+if re.search('\(.*\)' , parm_str):
     OfflineFuncLib.function_run( parm_str )
     exit()
 
@@ -178,7 +178,7 @@ filelist_filehandle.close()
 
 # parser vcs filelist
 filelist_info      = FileInfLib.parser_vcs_file_list(vtags_file_list)
-define_pair_list   = filelist_info['define_pair_list']
+define_pair_list   = filelist_info['define_pair_list']     
 incdir_list        = filelist_info['incdir_list']
 design_list        = filelist_info['design_list']
 vtags_incdir_list  = filelist_info['vtags_incdir_list']
@@ -240,7 +240,7 @@ if has_new_postfix_added:
     # update newset support prefix
     change_success = False
     for i,l in enumerate(old_config):
-        m_postfix = re.match(r'(?P<pre>support_verilog_postfix\s*=\s*)\[',l)
+        m_postfix = re.match('(?P<pre>support_verilog_postfix\s*=\s*)\[',l)
         if m_postfix:
             old_config[i] = m_postfix.group('pre') + str( list(G['SupportVerilogPostfix']) ) + '\n'
             change_success = True

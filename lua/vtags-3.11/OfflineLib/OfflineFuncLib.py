@@ -215,7 +215,7 @@ def mtopo(module_name, depth = None, mask = 0, space = None):
         print('Error: no vtags.db found !')
         return
     if depth == None:
-        print("Note: not set depth default == 1 !")
+        print ("Note: not set depth default == 1 !")
         depth = 1
     else:
         depth = int(depth)

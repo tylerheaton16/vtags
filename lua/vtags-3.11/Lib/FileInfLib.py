@@ -835,7 +835,7 @@ def recursive_search_all_deisgn_file_smart(dir_path):
                 assert( min(choise_postfix_idxs) >= 0 and max(choise_postfix_idxs) < len(new_found_design_postfix) )
                 break
             except:
-                choise = input("illegal input try again ('0 ... %d' or 'Entry to skip') : ")
+                choise = raw_input("illegal input try again ('0 ... %d' or 'Entry to skip') : ")
                 continue
         for idx in choise_postfix_idxs:
             postfix = new_found_design_postfix[idx]

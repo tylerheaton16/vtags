@@ -31,10 +31,10 @@ http://www.vim.org/scripts/script.php?script_id=5494
 
 import os
 import sys
-# import vim, when gen vtags it will no vim,so use try 
+# import vim, when gen vtags it will no vim,so use try
 try:
     import vim
-except: 
+except:
     pass
 # import normal lib
 import re
@@ -52,11 +52,11 @@ FileInfLib = None
 # function to load local library
 #-------------------------------------------------------------------------------
 def load_local_libs():
-    global BaseLib    
-    global ViewLib    
-    global CodeLib    
-    global FrameLib   
-    global FileInfLib 
+    global BaseLib
+    global ViewLib
+    global CodeLib
+    global FrameLib
+    global FileInfLib
     import Lib.BaseLib           as BaseLib
     import InlineLib.ViewLib     as ViewLib
     import Lib.CodeLib           as CodeLib
@@ -71,7 +71,7 @@ def reload_env_snapshort_full():
         ViewLib.PrintReport('Warning: vtags already active, switch to snapshort will close current open files !')
     # current must has vtags.db
     if not G['VTagsPath']:
-        return False 
+        return False
     # update local lib
     load_local_libs()
     # try active InlineActive
@@ -109,12 +109,12 @@ def try_reload_env_snapshort():
     if G['Debug']:
         reload_env_snapshort_full()
     else:
-        try: 
+        try:
             reload_env_snapshort_full()
         except: pass
 
 # shortcut key: gi
-def go_into_submodule(): 
+def go_into_submodule():
     cursor_inf          = ViewLib.get_cur_cursor_inf()
     module_inst_cnt_inf = FileInfLib.get_module_inst_cnt_sub_inf_from_pos(cursor_inf["file_path"], cursor_inf["pos"])
     # if match cnt inf, jump to cnt io
@@ -148,7 +148,7 @@ def go_into_submodule():
             BaseLib.PrintDebug("ERROR: go_into_submodule: real_location failed ! submodule_inf=%s"%(submodule_inf.__str__()))
         BaseLib.PrintDebug("ERROR: go_into_submodule: cnt_sub_inf and submodule_inf failed! inst_inf = %s"%(inst_inf.__str__()))
     elif file_inf:
-        match_include = re.match('\s*`include\W*"(?P<path>.*)"', cursor_inf['line'])
+        match_include = re.match(r'\s*`include\W*"(?P<path>.*)"', cursor_inf['line'])
         if match_include:
             # test if it's include line if is go into include file
             logic_location = FileInfLib.location_r2l( cursor_inf['file_path'], cursor_inf["pos"], file_inf["code_inf_list"] )
@@ -158,7 +158,7 @@ def go_into_submodule():
             inc_real_location = FileInfLib.location_l2r(inc_pos, file_inf["code_inf_list"])
             assert(inc_real_location),"%s"%([inc_pos,file_inf["code_inf_list"],inc_real_location].__str__())
             file_name = match_include.group('path').strip().split('/')[-1]
-            if re.search( '(^|/)%s\s*$'%(file_name), inc_real_location['path']):
+            if re.search(r'(^|/)%s\s*$'%(file_name), inc_real_location['path']):
                 ViewLib.add_trace_point()
                 ViewLib.go_win( inc_real_location['path'], inc_real_location["pos"] ) # logic to real
                 # add include file to logic path, because baybe file not in module and not add when get module inf
@@ -178,7 +178,7 @@ def try_go_into_submodule():
         except: pass
 
 # shortcut key: gu
-def go_upper_module(): 
+def go_upper_module():
     cursor_inf      = ViewLib.get_cur_cursor_inf()
     file_module_inf = FileInfLib.get_module_inf_from_pos(cursor_inf['file_path'], cursor_inf['pos'])
     cur_file_inf    = file_module_inf['file_inf']
@@ -229,7 +229,7 @@ def go_upper_module():
         return
     # has multi father, user to choise
     assert( len(line_and_link_list['link_list']) > 1 )
-    # i = 0 
+    # i = 0
     link_list = []
     line_list = []
     # pre inf
@@ -262,7 +262,7 @@ def try_go_upper_module():
         except: pass
 
 # shortcut key: mt
-def print_module_trace(): 
+def print_module_trace():
     cursor_inf         = ViewLib.get_cur_cursor_inf()
     # get cur module name
     cur_module_inf     = FileInfLib.get_module_inf_from_pos(cursor_inf['file_path'], cursor_inf['pos'])["module_inf"]
@@ -384,7 +384,7 @@ def try_trace_signal_destinations():
         except: pass
 
 
-# shortcut key: <Space><Down> 
+# shortcut key: <Space><Down>
 def roll_back():
     if G['IgnoreNextSpaceOp']:
         G['IgnoreNextSpaceOp'] = False
@@ -411,7 +411,7 @@ def try_roll_back():
         except: pass
 
 
-# shortcut key: <Space><Up> 
+# shortcut key: <Space><Up>
 def go_forward():
     if G['IgnoreNextSpaceOp']:
         G['IgnoreNextSpaceOp'] = False
@@ -465,7 +465,7 @@ def space_operation():
                 BaseLib.do_hyperlink(cur_frame_link, 'add_to_module_trace')
             else:
                 BaseLib.do_hyperlink(cur_frame_link, 'go_file_action')
-                
+
             ViewLib.add_trace_point()
             return
         # for check_point
@@ -502,12 +502,12 @@ def space_operation():
             # get each split's module and inst name
             m_i_list = []
             for i, s in enumerate(l_split):
-                s = re.sub('.*:\s*','',s)
-                s = re.sub('\s*\*\s*','',s).strip()
+                s = re.sub(r'.*:\s*','',s)
+                s = re.sub(r'\s*\*\s*','',s).strip()
                 if i == 0:
                     m_i_list.append( [None, s] )
                     continue
-                m_inst = re.match('(?P<inst>.*)\((?P<mod>.*)\)' ,s)
+                m_inst = re.match(r'(?P<inst>.*)\((?P<mod>.*)\)' ,s)
                 if not m_inst:
                     ViewLib.PrintReport('Warning: mt trace format error ! should be "a.i_b(m_b).i_c(m_c)...".')
                     return
@@ -538,7 +538,7 @@ def try_space_operation():
 def show_frame():
     G["IgnoreNextSpaceOp"] = G['FixExtraSpace']
     if ViewLib.cur_in_frame():
-        cursor_line = vim.current.window.cursor[0] - 1 
+        cursor_line = vim.current.window.cursor[0] - 1
         FrameLib.frame_line_fold_operation(cursor_line)
     else:
         FrameLib.show_topo()
@@ -606,11 +606,11 @@ def try_hold_current_win():
 def add_check_point():
     G["IgnoreNextSpaceOp"] = G['FixExtraSpace']
     cursor_inf   = ViewLib.get_cur_cursor_inf()
-    level        = G['CheckPointInf']['TopFoldLevel'] + 1 
+    level        = G['CheckPointInf']['TopFoldLevel'] + 1
     key          = G['Frame_Inf']['FoldLevelSpace']*level + cursor_inf['word']
     link_parm = {
          'Type'             : 'check_point'            # fold_unfold_frame_action()
-        ,'fold_level'       : level                    # fold_unfold_frame_action() 
+        ,'fold_level'       : level                    # fold_unfold_frame_action()
         ,'fold_status'      : 'fix'                    # fold_unfold_frame_action()
         ,'go_path'          : cursor_inf['file_path']  # go_file_action()
         ,'go_pos'           : cursor_inf['pos']        # go_file_action()
@@ -677,7 +677,7 @@ def del_operation():
         FrameLib.show_check_point()
         return
     # del a base module
-    if (cur_file_link['action_parm_dic']['Type'] == 'base_module') and (cur_file_link['action_parm_dic']['fold_level'] > G['BaseModuleInf']['TopFoldLevel']): 
+    if (cur_file_link['action_parm_dic']['Type'] == 'base_module') and (cur_file_link['action_parm_dic']['fold_level'] > G['BaseModuleInf']['TopFoldLevel']):
         G["IgnoreNextSpaceOp"] = G['FixExtraSpace']
         G['BaseModuleInf']['BaseModules'].remove(cur_file_link['action_parm_dic']['go_module_name'])
         FrameLib.update_base_module_pickle()
@@ -701,7 +701,7 @@ def try_save_env_snapshort():
         if G['SaveEnvSnapshort_F']():
             ViewLib.PrintReport('Note: save env snapshort success !')
     else:
-        try: 
+        try:
             if G['SaveEnvSnapshort_F']():
                 ViewLib.PrintReport('Note: save env snapshort success !')
         except: pass
