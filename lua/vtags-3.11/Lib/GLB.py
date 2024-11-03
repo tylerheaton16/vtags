@@ -55,12 +55,12 @@ def del_old_logs(vtags_db_folder_path):
     ls_a_f = [ f.strip('\n') for f in os.popen('ls -a ' + vtags_db_folder_path).readlines() ]
     used_log_index = set()
     for f in ls_a_f:
-        match_swp = re.match('\.(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?\.swp',f)
+        match_swp = re.match(r'\.(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?\.swp',f)
         if match_swp:
             used_log_index.add(int(match_swp.group('idx')))
     ls_f   = [ f.strip('\n') for f in os.popen('ls ' + vtags_db_folder_path).readlines() ]
     for f in ls_f:
-        match_idx = re.match('(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?', f)
+        match_idx = re.match(r'(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?', f)
         if not match_idx:
             continue
         cur_index = int(match_idx.group('idx'))
@@ -215,7 +215,7 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
     if vtags_db_folder_path:
         del_old_logs(vtags_db_folder_path)
         all_file_names_in_vtags_db = " ".join( os.listdir(vtags_db_folder_path) )
-        while re.search( "(^|\s)(\.)?(debug%d\.log)(\W|$)"%(valid_log_index), all_file_names_in_vtags_db):
+        while re.search(r"(^|\s)(\.)?(debug%d\.log)(\W|$)"%(valid_log_index), all_file_names_in_vtags_db):
             valid_log_index += 1
     # stale now # file link used as a link to space option:
     # stale now # ----------------------------------------------------------------------------------------------------------------------
