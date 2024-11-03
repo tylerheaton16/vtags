@@ -40,7 +40,7 @@ from Lib.ExceptionLib import *
 #-------------------------------------------------------------------------------
 def get_install_path():
     for path in sys.path:
-        m_path = re.match('(?P<i_path>.*(^|\W)vtags-[^/]*)', path)
+        m_path = re.match(r'(?P<i_path>.*(^|\W)vtags-[^/]*)', path)
         if m_path:
             return m_path.group('i_path')
     print("Error: can not found vtags install directory at env path, please vtags-x.xx(x should be digit (0-9)!, cur env path: %s"%(path))
@@ -55,12 +55,12 @@ def del_old_logs(vtags_db_folder_path):
     ls_a_f = [ f.strip('\n') for f in os.popen('ls -a ' + vtags_db_folder_path).readlines() ]
     used_log_index = set()
     for f in ls_a_f:
-        match_swp = re.match('\.(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?\.swp',f)
+        match_swp = re.match(r'\.(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?\.swp',f)
         if match_swp:
             used_log_index.add(int(match_swp.group('idx')))
     ls_f   = [ f.strip('\n') for f in os.popen('ls ' + vtags_db_folder_path).readlines() ]
     for f in ls_f:
-        match_idx = re.match('(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?', f)
+        match_idx = re.match(r'(Frame|Report|run)(?P<idx>\d+)(\.ZL|\.log)(\.v)?', f)
         if not match_idx:
             continue
         cur_index = int(match_idx.group('idx'))
@@ -87,7 +87,7 @@ def save_env_snapshort():
     # 1: save G
     snapshort['G'] = {}
     snapshort['G']['OpTraceInf']                      = {}
-    snapshort['G']['OpTraceInf']['TracePoints']       = G['OpTraceInf']['TracePoints'] 
+    snapshort['G']['OpTraceInf']['TracePoints']       = G['OpTraceInf']['TracePoints']
     snapshort['G']['OpTraceInf']['Nonius'     ]       = G['OpTraceInf']['Nonius'     ]
     snapshort['G']['WorkWin_Inf']                     = {}
     snapshort['G']['WorkWin_Inf']['OpenWinTrace']     = G['WorkWin_Inf']['OpenWinTrace']
@@ -118,7 +118,7 @@ def save_env_snapshort():
         act_win_inf.append({'path': c_file_path, 'cursor': c_cursor, 'size': c_size })
     # last is current window
     cur_file_path  = os.path.realpath(vim.current.buffer.name)
-    cur_cursor     = vim.current.window.cursor   
+    cur_cursor     = vim.current.window.cursor
     cur_size       = (vim.current.window.width, vim.current.window.height)
     act_win_inf.append({'path': cur_file_path, 'cursor': cur_cursor, 'size': cur_size })
     snapshort['act_win_inf'] = act_win_inf
@@ -135,7 +135,7 @@ def save_env_snapshort():
 def reload_env_snapshort(snapshort, G):
     # 1: reload G
     snapshort_G = snapshort['G']
-    G['OpTraceInf']['TracePoints']    = snapshort_G['OpTraceInf']['TracePoints'] 
+    G['OpTraceInf']['TracePoints']    = snapshort_G['OpTraceInf']['TracePoints']
     G['OpTraceInf']['Nonius'     ]    = snapshort_G['OpTraceInf']['Nonius'     ]
     G['WorkWin_Inf']['OpenWinTrace']  = snapshort_G['WorkWin_Inf']['OpenWinTrace']
     G['VimBufferLineFileLink' ]       = snapshort_G["VimBufferLineFileLink" ]
@@ -171,15 +171,15 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
             level -= 1
             if level == 0:
                 break
-    # if not found a valid vtags db and need raise except to speed up 
+    # if not found a valid vtags db and need raise except to speed up
     # none vtags vim open
     if (not allow_from_glb) and (not os.path.isdir(vtags_db_folder_path)):
         # raise VtagsDBNotFoundExcept
-        return {} 
+        return {}
     #-------------------------------------------------------------------------------
     # get config
     # get finial config, if has vtag.db local config use local, if not use install
-    # path glable config 
+    # path glable config
     #-------------------------------------------------------------------------------
     config          = None
     config_from_glb = False
@@ -206,7 +206,7 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
 
     #-------------------------------------------------------------------------------
     # init get the supported design file postfix
-    # real supported postfix is config.support_verilog_postfix add postfix geted by 
+    # real supported postfix is config.support_verilog_postfix add postfix geted by
     # the input file list
     #-------------------------------------------------------------------------------
     support_design_postfix_set = set(config.support_verilog_postfix)
@@ -228,8 +228,8 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
     # stale now # ---------------------------------------------------------------------------------------------------------------------------
     # stale now # all vim buffer line file link, a path to file link list dic
     VimBufferLineFileLink = {}
-    
-    
+
+
     Frame_Inf = {
          "Frame_Win_x"        : config.frame_window_width      # frame window width
         ,"Frame_Path"         : ''
@@ -238,8 +238,8 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
     }
     if vtags_db_folder_path:
         Frame_Inf["Frame_Path"] = vtags_db_folder_path + '/' + 'Frame'
-    
-    
+
+
     Report_Inf = {
          "Report_Win_y"       : config.report_window_height        # report window height
         ,"Report_Path"        : None
@@ -247,36 +247,36 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
     }
     if vtags_db_folder_path:
         Report_Inf["Report_Path"] = vtags_db_folder_path + '/' + 'Report.v'
-    
+
     WorkWin_Inf ={
          "MaxNum"       : config.max_open_work_window_number
         ,"OpenWinTrace" : []
     }
-    
+
     TraceInf = {
-         'LastTraceSource' : {'Maybe':[], 'Sure':[], 'ShowIndex': 0, 'SignalName':'', 'ValidLineRange':[-1,-1], 'Path':'' } # Maybe[{'show':'', 'file_link':{ 'key':'','pos':(l,c),'path':'' } }] 
+         'LastTraceSource' : {'Maybe':[], 'Sure':[], 'ShowIndex': 0, 'SignalName':'', 'ValidLineRange':[-1,-1], 'Path':'' } # Maybe[{'show':'', 'file_link':{ 'key':'','pos':(l,c),'path':'' } }]
         ,'LastTraceDest'   : {'Maybe':[], 'Sure':[], 'ShowIndex': 0, 'SignalName':'', 'ValidLineRange':[-1,-1], 'Path':'' }
         ,'TraceSourceOptimizingThreshold' : config.trace_source_optimizing_threshold
     }
-    
+
     # operation trace
     OpTraceInf = {
          'TracePoints' : [] # {'path':'', "pos":(line, colum), 'key':''}
         ,'TraceDepth'  : config.max_roll_trace_depth
-        ,'Nonius'      : -1  # roll nonius 
+        ,'Nonius'      : -1  # roll nonius
     }
-    
+
     TopoInf       = {
          'CurModule'    : ''
         ,'TopFoldLevel' : 0
     }
-    
+
     CheckPointInf = {
          "MaxNum"         : config.max_his_check_point_num
         ,"CheckPoints"    : []  #{}--- key: '', link: {}
         ,"TopFoldLevel"   : 0
     }
-    
+
     #-------------------------------------------------------------------------------
     # init the base module inf
     #-------------------------------------------------------------------------------
@@ -289,14 +289,14 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
             pkl_input.close()
         except:
             pass
-    
+
     BaseModuleInf = {
          "BaseModuleThreshold"  : config.base_module_threshold  # when module inst BaseModuleThreshold times, then default set it to base module
         ,"BaseModules"          : BaseModules # module name set()
         ,"TopFoldLevel"         : 0
     }
 
-    # max file name length in current os    
+    # max file name length in current os
     try: # valid in vtags-2.22
         MaxFileNameLength = config.max_file_name_length # max file file name length
     except: # for pre version's local config
@@ -318,14 +318,14 @@ def init_G_from_vtagsDB( vtags_db_folder_path = '', allow_from_glb = True ):
         ,'InLineCodeInfDic'                    : {} # {"file_path": {"code":[], "line_range":[] } }
         ,'InLineIncFile2LogicFileDic'          : {} # real file name to logic file path dic
         ,'FileListInf'                         : None
-        ,'OffLineModulePathDic'                : None 
+        ,'OffLineModulePathDic'                : None
         ,'OffLineFileInfoDic'                  : None
         ,'OffLineMacroInfDic'                  : None
         ,"OffLineFatherInstListDic"            : None
         ,"OffLineChildModuleListDic"           : None
-        ,"OffLineModifyMask"                   : {  "OffLineModulePathDic"      : False 
-                                                   ,"OffLineFileInfoDic"        : False   
-                                                   ,"OffLineMacroInfDic"        : False  
+        ,"OffLineModifyMask"                   : {  "OffLineModulePathDic"      : False
+                                                   ,"OffLineFileInfoDic"        : False
+                                                   ,"OffLineMacroInfDic"        : False
                                                    ,"OffLineFatherInstListDic"  : False
                                                    ,"OffLineChildModuleListDic" : False }
         ,'ModuleTrace'                         : {}    # {module_name: father_inst_inf }
@@ -395,10 +395,10 @@ if vim_opened and vim_start_open_file.rstrip('/')[-8:] == 'vtags.db':
         LoadTopModulePending = True
 
 #-------------------------------------------------------------------------------
-# init G 
+# init G
 #-------------------------------------------------------------------------------
 # if no vim opened means it's Offline function, so even if no vtags.db
-# found in init_G_from_vtagsDB() it must not raise VtagsDBNotFoundExcept 
+# found in init_G_from_vtagsDB() it must not raise VtagsDBNotFoundExcept
 # except because user can set vtags db use set_vtags_db_path()
 # if vim has opened, must has a valid vtags db, if not found just raise
 # VtagsDBNotFoundExcept and terminate the python run
@@ -431,7 +431,7 @@ if vim_opened:
             G['OfflineActive'] = False # Offline will set True when set_vtags_db_path()
         else:
             G['InlineActive']  = True
-        
+
 #-------------------------------------------------------------------------------
 # this function used to print debug inf:
 # (1) generate vtags.db generate vtags.db/vtags_db.log
@@ -458,7 +458,7 @@ def PrintDebug( str, out_path = ''):
         output.write(str+'\n')
         output.close()
 G['PrintDebug_F'] = PrintDebug
-    
+
 #-------------------------------------------------------------------------------
 # Offline vtags use -db set a new vtags.db
 #-------------------------------------------------------------------------------
