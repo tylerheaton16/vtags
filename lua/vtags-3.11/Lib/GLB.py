@@ -40,7 +40,7 @@ from Lib.ExceptionLib import *
 #-------------------------------------------------------------------------------
 def get_install_path():
     for path in sys.path:
-        m_path = re.match('(?P<i_path>.*(^|r'\W')vtags-[^/]*)', path)
+        m_path = re.match(r'(?P<i_path>.*(^|\W)vtags-[^/]*)', path)
         if m_path:
             return m_path.group('i_path')
     print("Error: can not found vtags install directory at env path, please vtags-x.xx(x should be digit (0-9)!, cur env path: %s"%(path))
