@@ -118,12 +118,12 @@ def MountPrintLines(line_list, label = '', link_list = None, length = 80, Print 
 
 def PrintTime(prefix,t):
     if False:
-        time_str = re.sub('\..*','',str(t*1000000))
+        time_str = re.sub(r'\..*','',str(t*1000000))
         PrintDebug(prefix+time_str)
 
 def get_full_word(line, y):
-    pre_part  = ( re.match('^(?P<pre>\w*)',(line[:y])[::-1]).group('pre') )[::-1]
-    post_part = re.match('^(?P<post>\w*)', line[y:]).group('post')
+    pre_part  = ( re.match(r'^(?P<pre>\w*)',(line[:y])[::-1]).group('pre') )[::-1]
+    post_part = re.match(r'^(?P<post>\w*)', line[y:]).group('post')
     return pre_part + post_part
 
 def get_file_path_postfix(file_path):
@@ -152,9 +152,9 @@ def get_valid_code(code_line, mode = ['note','macro_code', 'str']):
             code_line = code_line[:pos]
         pos = code_line.find('/*')
         if pos != -1:
-            code_line = re.sub('/\*.*?\*/', '', code_line)
+            code_line = re.sub(r'/\*.*?\*/', '', code_line)
     if 'macro_code' in mode:
-        if re.match('\s*(`define|`ifdef|`ifndef|`else|`endif)',code_line):
+        if re.match(r'\s*(`define|`ifdef|`ifndef|`else|`endif)',code_line):
             code_line = ''
     if 'str' in mode:
         code_line = re.sub('"[^"]*"', '', code_line)
@@ -163,7 +163,7 @@ def get_valid_code(code_line, mode = ['note','macro_code', 'str']):
 # this use egrep to find all the signal appear pos,code_line
 def search_verilog_code_use_grep(key, path, row_range = ()):
     search_result = []
-    match_lines    = os.popen('egrep -n -h \'(^|\W)%s(\W|$)\' %s'%(key, path)).readlines()
+    match_lines    = os.popen(r'egrep -n -h \'(^|\W)%s(\W|$)\' %s'%(key, path)).readlines()
     for l in match_lines:
         l = l.strip('\n')
         split0 = l.split(':')
@@ -172,7 +172,7 @@ def search_verilog_code_use_grep(key, path, row_range = ()):
         if row_range and ( line_num not in range(row_range[0], row_range[1]+1 ) ):
             continue
         # del note see if has key
-        s0 = re.search('(?P<pre>^|\W)%s(\W|$)'%(key), re.sub('//.*','',code_line) )
+        s0 = re.search(r'(?P<pre>^|\W)%s(\W|$)'%(key), re.sub('//.*','',code_line) )
         if s0:
             colum_num  = s0.span()[0] + len(s0.group('pre'))
             match_pos  = (line_num, colum_num)
@@ -238,7 +238,7 @@ def get_bracket_pair_index(code_line, start_bracket_depth):
     split_by_left_bracket  = code_line.split('(')
     split_by_right_bracket = code_line.split(')')
     # get all the left_bracket appear colum in code_line
-    last_left_bracket_y   = -1  # left_bracket in code_line 
+    last_left_bracket_y   = -1  # left_bracket in code_line
     left_bracket_appear_y = []
     for pace in split_by_left_bracket:
         last_left_bracket_y = last_left_bracket_y + len(pace) + 1
@@ -246,7 +246,7 @@ def get_bracket_pair_index(code_line, start_bracket_depth):
     assert(left_bracket_appear_y[-1] == len(code_line))
     del left_bracket_appear_y[-1:] # del last split pace y
     # get all the left_bracket appear colum in code_line
-    last_right_bracket_y   = -1  # right_bracket in code_line 
+    last_right_bracket_y   = -1  # right_bracket in code_line
     right_bracket_appear_y = []
     for pace in split_by_right_bracket:
         last_right_bracket_y = last_right_bracket_y + len(pace) + 1
@@ -274,10 +274,10 @@ def get_bracket_pair_index(code_line, start_bracket_depth):
                 out_level1_right_bracket_y_list.append(y)
     return { 'end_bracket_depth'               : cur_bracket_depth
             ,'in_level1_left_bracket_y_list'   : in_level1_left_bracket_y_list
-            ,'out_level1_right_bracket_y_list' : out_level1_right_bracket_y_list } 
+            ,'out_level1_right_bracket_y_list' : out_level1_right_bracket_y_list }
 
 #------------------------------------------------------------------------------
-# hyperlink function 
+# hyperlink function
 #------------------------------------------------------------------------------
 hyperlink_action_dic = {}
 
@@ -387,7 +387,7 @@ def do_hyperlink( hyperlink, trigger_list = []):
         result_state = do_action_function( hyperlink_action_dic[ trigger_list ], action_parm_dic )
         hyperlink['intime_parms_dic'] = None
         del action_parm_dic['intime_parms_dic']
-        return result_state        
+        return result_state
     # if has trigger_list, trigger action one by one
     # first check all action can work
     for trigger in trigger_list:

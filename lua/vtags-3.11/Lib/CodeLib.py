@@ -61,7 +61,7 @@ def replace_note_and_no_bracket_level_one_code(line):
         # match "//"
         if ( not in_multi_line_notes and pre_backslash and cur_backslash):
             in_single_line_notes = 1
-            pure_line += c 
+            pure_line += c
             continue
         # match "/*"
         if ( not in_single_line_notes and pre_backslash and cur_asterisk):
@@ -112,16 +112,16 @@ def replace_note_and_no_bracket_level_one_code(line):
 
 def current_appear_is_dest_or_source(key, code_y):
     code_line, y = code_y
-    # if y is not at char 
-    if (len(code_line) <= y) or (not re.match('\w', code_line[y])):
+    # if y is not at char
+    if (len(code_line) <= y) or (not re.match(r'\w', code_line[y])):
         return 'unknown'
     pure_line = replace_note_and_no_bracket_level_one_code(code_line)
     assert( len(pure_line) == len(code_line) )
     # if y is in notes, or string
     if pure_line[y] == '/' or pure_line[y] == '"':
-        return 'unknown' 
+        return 'unknown'
     # if in condition bracket is dest
-    if pure_line[y] == '(' and re.search("(\W|^)(if|case|casez|casex|for)\s*\(*", pure_line[:y]):
+    if pure_line[y] == '(' and re.search(r"(\W|^)(if|case|casez|casex|for)\s*\(*", pure_line[:y]):
         return 'dest'
     # if form current pos to next ';' if has "=" or "<=";
     # PrintDebug(': %d:\n->%s\n->%s'%(y, code_line, pure_line[:y]))
@@ -164,7 +164,7 @@ def first_word_in_range( codes , in_range ):
             l = ' '*(start_c) + l[start_c:]
         if l_i == end_l:
             l = l[:end_c+1]
-        search_word = re.search('\w+', l)
+        search_word = re.search(r'\w+', l)
         if search_word:
             y_offset = search_word.span()[0]
             return ( (x_offset, y_offset) ,search_word.group())
@@ -187,14 +187,14 @@ def trace_io_signal(trace_type, cursor_inf, report_level = 1):
         PrintDebug('Trace: trace_io_signal: not io signal')
         return False # not io signal
     # check io type and trace type
-    if (trace_type is 'dest') and (io_inf["type"] == 1):
+    if (trace_type == 'dest') and (io_inf["type"] == 1):
         PrintDebug('Trace: trace_io_signal: not output signal, not dest')
         return False # not output signal, not dest
-    if (trace_type is 'source') and (io_inf["type"] == 2):
+    if (trace_type == 'source') and (io_inf["type"] == 2):
         PrintDebug('Trace: trace_io_signal: not input signal, not source')
         return False # not input signal, not source
     # clear pre trace dest/source result
-    clear_last_trace_inf( trace_type )  
+    clear_last_trace_inf( trace_type )
     # get module's father check value
     father_inst_list  = []
     cur_module_name   = module_io_inf["module_inf"]["module_name_sr"]['str']
@@ -227,7 +227,7 @@ def trace_io_signal(trace_type, cursor_inf, report_level = 1):
             return True
         l2roffset = logic_cnt_name_range[0] - real_location['pos'][0]
         real_cnt_name_range = [ logic_cnt_name_range[0]-l2roffset, logic_cnt_name_range[1], logic_cnt_name_range[2]-l2roffset, logic_cnt_name_range[3] ]
-        # read lines        
+        # read lines
         father_module_codes = read_file_lines(real_location['path'], real_cnt_name_range[0], real_cnt_name_range[2])
         relative_range      = [0, real_cnt_name_range[1], real_cnt_name_range[2] - real_cnt_name_range[0], real_cnt_name_range[3]]
         if not father_module_codes:
@@ -243,7 +243,7 @@ def trace_io_signal(trace_type, cursor_inf, report_level = 1):
         # PrintDebug(":%s"%([file_link_parm_dic, father_module_codes, relative_range, real_location['path'], real_cnt_name_range, logic_cnt_name_range]))
         file_link           = gen_hyperlink('go_file_action', file_link_parm_dic) # logic to real
         trace_result        = {'show': show_str, 'file_link': file_link}
-        if trace_type is 'dest':
+        if trace_type == 'dest':
             G['TraceInf']['LastTraceDest']['Sure'].append(trace_result)
             G['TraceInf']['LastTraceDest']['SignalName']       = cursor_inf['word']
             G['TraceInf']['LastTraceDest']['ValidLineRange']   = module_io_inf["module_inf"]['module_line_range']
@@ -303,7 +303,7 @@ register_hyperlink_action( trace_io_signal_action, description = 'this link func
 # INPUT    = 1
 # OUTPUT   = 2
 # INOUT    = 3
-# this function used to trace signal at subcall lines 
+# this function used to trace signal at subcall lines
 def trace_signal_at_subcall_lines(trace_type, cursor_inf, report_level = 1):
     module_inst_cnt_sub_inf = FileInfLib.get_module_inst_cnt_sub_inf_from_pos(cursor_inf['file_path'], cursor_inf['pos'])
     if not module_inst_cnt_sub_inf["inst_inf"]:
@@ -311,7 +311,7 @@ def trace_signal_at_subcall_lines(trace_type, cursor_inf, report_level = 1):
         return False # not in module call io
     if not module_inst_cnt_sub_inf["cnt_sub_inf"]:
         PrintDebug('Trace: trace_signal_at_subcall_lines: is module call , no connect subio found!')
-        return False    
+        return False
     # start add sub io trace inf
     cnt_sub_inf = module_inst_cnt_sub_inf["cnt_sub_inf"]
     assert(trace_type in ['source', 'dest'])
@@ -319,7 +319,7 @@ def trace_signal_at_subcall_lines(trace_type, cursor_inf, report_level = 1):
         return False # submodule not source, just pass
     elif trace_type == 'dest' and cnt_sub_inf['type'] == 2:
         return False # submodule not source, just pass
-    # must a trace no matter success or not clear old trace result 
+    # must a trace no matter success or not clear old trace result
     clear_last_trace_inf( trace_type )
     # has sub module and in submodule signal is out, then it's source
     submodule_name      = cnt_sub_inf['module_name_sr']['str']
@@ -352,7 +352,7 @@ def trace_signal_at_subcall_lines(trace_type, cursor_inf, report_level = 1):
         G['TraceInf']['LastTraceDest']['ValidLineRange'] = ( cursor_inf['line_num'], cursor_inf['line_num'] )
         G['TraceInf']['LastTraceDest']['Path']           = cursor_inf['file_path']
     # will go to sub module code now, so cur module is the sub module last call
-    FileInfLib.add_to_module_trace(submodule_name, '%s.%s'%(module_inst_cnt_sub_inf["module_inf"]["module_name_sr"]['str'], 
+    FileInfLib.add_to_module_trace(submodule_name, '%s.%s'%(module_inst_cnt_sub_inf["module_inf"]["module_name_sr"]['str'],
                                                  module_inst_cnt_sub_inf["inst_inf"]["inst_name_sr"]['str']))
     # show source to report win, and go first trace
     PrintReport(spec_case = trace_type)
@@ -448,7 +448,7 @@ def trace_normal_signal(trace_type, cursor_inf):
         G['TraceInf']['LastTraceSource']['SignalName']     = trace_signal_name
         G['TraceInf']['LastTraceSource']['ValidLineRange'] = cur_module_inf['module_line_range']
         G['TraceInf']['LastTraceSource']['Path']           = cur_module_path
-    else: 
+    else:
         G['TraceInf']['LastTraceDest']['SignalName']       = trace_signal_name
         G['TraceInf']['LastTraceDest']['ValidLineRange']   = cur_module_inf['module_line_range']
         G['TraceInf']['LastTraceDest']['Path']             = cur_module_path
@@ -509,7 +509,7 @@ def trace_normal_signal(trace_type, cursor_inf):
             submodule_and_subinstance = ''
             type_known                = False
             # io already checked continue
-            if re.search('(\W|^)(input|output|inout)(\W)', get_valid_code(appear_line) ):
+            if re.search(r'(\W|^)(input|output|inout)(\W)', get_valid_code(appear_line) ):
                 continue
             module_inst_cnt_sub_inf = FileInfLib.get_module_inst_cnt_sub_inf_from_pos(appear_path, appear_pos)
             inst_inf = module_inst_cnt_sub_inf['inst_inf']
@@ -591,7 +591,7 @@ def trace_glb_define_signal(trace_type, cursor_inf):
     #     XXX       cur word
     # ...`XX        pre_pos_part
     pre_pos_part = cur_line[:cursor_inf['pos'][1] + 1]
-    match_macro  = re.match('\w+`' , pre_pos_part[::-1])
+    match_macro  = re.match(r'\w+`' , pre_pos_part[::-1])
     if not match_macro:
         PrintDebug('Trace: trace_glb_define_signal: %s not macro_name !'%(cur_word))
         return False
@@ -639,7 +639,7 @@ def get_father_inst_line_and_link_list( cur_module_name ):
             father_inst_inf      = FileInfLib.get_module_inst_inf(father, inst)
             if not father_inst_inf["inst_inf"]:
                 continue
-            # logic to real 
+            # logic to real
             real_location = FileInfLib.location_l2r(father_inst_inf["inst_inf"]['inst_name_sr']['range'], father_inst_inf["module_inf"]['code_inf_list'])
             if not real_location:
                 PrintDebug("ERROR: get_father_inst_line_and_link_list: real_location failed! inst_inf=%s, module_inf = %s"%(father_inst_inf["inst_inf"].__str__(), father_inst_inf["module_inf"].__str__()))
@@ -649,12 +649,12 @@ def get_father_inst_line_and_link_list( cur_module_name ):
                                         ,'last_modify_time'    : get_sec_mtime(real_location['path'])
                                         ,'go_path'             : real_location['path']
                                         ,'go_pos'              : real_location['pos']
-                                        ,'go_word'             : father_inst_inf["inst_inf"]['inst_name_sr']['str'] 
+                                        ,'go_word'             : father_inst_inf["inst_inf"]['inst_name_sr']['str']
                                         # for add_to_module_trace
                                         ,'module_name'         : cur_module_name
                                         ,'father_inst'         : father_inst }
 
-            c_file_link = gen_hyperlink(['go_file_action', 'add_to_module_trace'], c_file_link_parm_dic, 'possible_upper') # logic to real 
+            c_file_link = gen_hyperlink(['go_file_action', 'add_to_module_trace'], c_file_link_parm_dic, 'possible_upper') # logic to real
             c_print_str = '%d : %s(%s)'%(i, father_inst, cur_module_name)
             link_list.append( c_file_link )
             line_list.append( c_print_str )

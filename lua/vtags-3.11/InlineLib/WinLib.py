@@ -31,7 +31,7 @@ http://www.vim.org/scripts/script.php?script_id=5494
 
 try:
     import vim
-except: 
+except:
     pass
 import sys
 import re
@@ -92,8 +92,8 @@ def Cur_Act_Win():
 
 # this functhon used to open a file
 # if file already open jump to that window
-# if file not opened, and opened window not beyond max open win number, open a new window 
-# if file not opened, and opened window beyond max open win number, close a old and open a new window 
+# if file not opened, and opened window not beyond max open win number, open a new window
+# if file not opened, and opened window beyond max open win number, close a old and open a new window
 def Open(path, win_num = -1):
     path = os.path.realpath(path)
     Act_Win = Cur_Act_Win()
@@ -260,11 +260,11 @@ def go_win( path = '', pos = (), highlight_word = '', win_num = -1):
     path = os.path.realpath(path)
     Open(path, win_num)
     # fix bug for search instance_name[4:0]
-    valid_highlight = re.search('\w+',highlight_word)
+    valid_highlight = re.search(r'\w+',highlight_word)
     if valid_highlight:
         valid_highlight_word = valid_highlight.group()
         vim.current.window.cursor = (1,0) # search from top in case match to left vim warning
-        vim.command('/\c\<'+valid_highlight_word+'\>')
+        vim.command(r'/\c\<'+valid_highlight_word+'\>')
     if pos:
         max_x     = len( vim.current.buffer ) - 1 #  len( vim.current.buffer[ len(vim.current.buffer) - 1 ] ) )
         valid_pos = [max_x, None]
