@@ -264,7 +264,7 @@ def go_win( path = '', pos = (), highlight_word = '', win_num = -1):
     if valid_highlight:
         valid_highlight_word = valid_highlight.group()
         vim.current.window.cursor = (1,0) # search from top in case match to left vim warning
-        vim.command(r'/\c\<'+valid_highlight_word+'\>')
+        vim.command(r'/\c\<{}\>'.format(valid_highlight_word))
     if pos:
         max_x     = len( vim.current.buffer ) - 1 #  len( vim.current.buffer[ len(vim.current.buffer) - 1 ] ) )
         valid_pos = [max_x, None]

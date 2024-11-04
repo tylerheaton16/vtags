@@ -784,7 +784,7 @@ def recursive_search_all_deisgn_file(dir_path):
         PrintDebug("recursive_search_all_deisgn_file: dir path not dir ! %s"%(dir_path))
         return []
     postfix_patten = '|'.join(list(G['SupportVerilogPostfix']))
-    cur_dir_all_files    = os.popen('find %s -path \'*vtags.db\' -a -prune -o -type f 2>/dev/null | egrep "\.(%s)$"'%(real_dir_path,postfix_patten)).readlines()
+    cur_dir_all_files    = os.popen(r'find %s -path \'*vtags.db\' -a -prune -o -type f 2>/dev/null | egrep "\.(%s)$"'%(real_dir_path,postfix_patten)).readlines()
     cur_dir_all_files    = [ d_l.rstrip('\n') for d_l in cur_dir_all_files ]
     return cur_dir_all_files
 
@@ -795,13 +795,13 @@ def recursive_search_all_deisgn_file_smart(dir_path):
         return []
     # get all files, check at most 10 file to make sure if it's verlog design
     design_patten        = "(" \
-                         + "(^\s*endmodule\s)"   \
-                         + "|(^\s*wire\s)"   \
-                         + "|(^\s*reg\s)"    \
-                         + "|(^\s*logic\s)"  \
-                         + "|(^\s*assign\s)" \
-                         + "|(^\s*always\W)" \
-                         + "|(^\s*define\s)" \
+                         + r"(^\s*endmodule\s)"   \
+                         + r"|(^\s*wire\s)"   \
+                         + r"|(^\s*reg\s)"    \
+                         + r"|(^\s*logic\s)"  \
+                         + r"|(^\s*assign\s)" \
+                         + r"|(^\s*always\W)" \
+                         + r"|(^\s*define\s)" \
                          + ")"
     cur_dir_all_files    = os.popen('find %s -path \'*vtags.db\' -a -prune -o -type f 2>/dev/null'%(real_dir_path)).readlines()
     postfix_design_map   = {}
@@ -831,7 +831,7 @@ def recursive_search_all_deisgn_file_smart(dir_path):
             if not choise:
                 break
             try:
-                choise_postfix_idxs = [ int(idx) for idx in re.split("\W+", choise) ]
+                choise_postfix_idxs = [ int(idx) for idx in re.split(r"\W+", choise) ]
                 assert( min(choise_postfix_idxs) >= 0 and max(choise_postfix_idxs) < len(new_found_design_postfix) )
                 break
             except:
@@ -843,13 +843,13 @@ def recursive_search_all_deisgn_file_smart(dir_path):
             G["SupportVerilogPostfix"].add( postfix )
     # get all design files
     postfix_patten = '|'.join(list(G['SupportVerilogPostfix']))
-    cur_dir_all_files    = os.popen('find %s -path \'*vtags.db\' -a -prune -o -type f 2>/dev/null | egrep "\.(%s)$"'%(real_dir_path,postfix_patten)).readlines()
+    cur_dir_all_files    = os.popen(r'find %s -path \'*vtags.db\' -a -prune -o -type f 2>/dev/null | egrep "\.(%s)$"'%(real_dir_path,postfix_patten)).readlines()
     cur_dir_all_files    = [ d_l.rstrip('\n') for d_l in cur_dir_all_files ]
     return cur_dir_all_files
 
 def gen_serialize_file_name(n, path):
     file_name = path.strip().split('/')[-1]
-    serialize_file_name =  'parser_' + re.sub('\W', '_', file_name) + '_%d.py'%(n)
+    serialize_file_name =  'parser_' + re.sub(r'\W', '_', file_name) + '_%d.py'%(n)
     return serialize_file_name
 
 def parser_vcs_file_list(vcs_file_list):
@@ -868,7 +868,7 @@ def parser_vcs_file_list(vcs_file_list):
         l = lines[i].strip()
         i += 1
         # match +define+
-        find_define = re.findall('\+define\+(\S+)', l)
+        find_define = re.findall(r'\+define\+(\S+)', l)
         for n_v in find_define:
             split_v = n_v.split('=')
             name    = split_v[0].strip()
@@ -877,16 +877,16 @@ def parser_vcs_file_list(vcs_file_list):
                 value = ''.join(split_v[1:])
             define_pair_list.append( (name, value) )
         # match +incdir+
-        find_incdir = re.findall('\+incdir\+([^+]+)', l)
+        find_incdir = re.findall(r'\+incdir\+([^+]+)', l)
         for incdir in find_incdir:
-            dir_path      = re.sub('\s.*', '', incdir)
+            dir_path      = re.sub(r'\s.*', '', incdir)
             dir_real_path = get_real_path(dir_path)
             if os.path.isdir(dir_real_path):
                 incdir_list.append( dir_real_path )
             else:
                 print("+incdir+'%s' - not a dir !"%(dir_path))
         # match -f
-        find_filelist = re.findall('-f\s+(\S+)', l)
+        find_filelist = re.findall(r'-f\s+(\S+)', l)
         for path in find_filelist:
             real_path = get_real_path( path.strip() )
             if real_path in passed_file_list:
@@ -900,7 +900,7 @@ def parser_vcs_file_list(vcs_file_list):
         #-v filename : Specifies a Verilog library file. VCS looks in this file for module and UDP
         #   definitions for the module and UDP instances that VCS found in your source code but for which it did not
         #   find the corresponding module or UDP definitions in your source code.
-        find_filepath = re.findall('-v\s+(\S+)', l)
+        find_filepath = re.findall(r'-v\s+(\S+)', l)
         for path in find_filepath:
             real_path = get_real_path( path.strip() )
             if os.path.isfile(real_path):
@@ -917,9 +917,9 @@ def parser_vcs_file_list(vcs_file_list):
                 design_set.add(real_path_l)
             continue
         # +vtags_incdir+dir_path :  recursive search all file below dir
-        find_vtags_incdir = re.findall('\+vtags_incdir\+([^+]+)', l)
+        find_vtags_incdir = re.findall(r'\+vtags_incdir\+([^+]+)', l)
         for vtags_incdir in find_vtags_incdir:
-            dir_path      = re.sub('\s.*', '', vtags_incdir)
+            dir_path      = re.sub(r'\s.*', '', vtags_incdir)
             if os.path.isdir(dir_path):
                 vtags_incdir_list.append( dir_path )
                 for r_f in recursive_search_all_deisgn_file_smart(dir_path):
