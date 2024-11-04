@@ -61,7 +61,7 @@ def offline_func_help(Print = False):
 # used for vtags to call functions
 def function_run( parm_str ):
     # 1 : use '-db xxx' set vtags.db path
-    db_path_search = re.search( '-db\s+(?P<path>\S+)', parm_str )
+    db_path_search = re.search(r'-db\s+(?P<path>\S+)', parm_str )
     if db_path_search:
         db_path = db_path_search.group('path')
         if os.path.isdir(db_path):
@@ -72,7 +72,7 @@ def function_run( parm_str ):
     # 2 : decode function and parm list
     func_name = ''
     parm_list = []
-    match_func = re.search('(?P<f_name>\w+)\s*\((?P<parms>.*)\)', parm_str.strip())
+    match_func = re.search(r'(?P<f_name>\w+)\s*\((?P<parms>.*)\)', parm_str.strip())
     if match_func:
         func_name = match_func.group('f_name')
         parm_list = [ p.strip() for p in match_func.group('parms').split(',') ]
@@ -98,7 +98,7 @@ def register_function( function_class, description = '' ):
     function_name = function_class.__name__
     if function_name in custom_function_inf:
         func  = custom_function_inf[func_name]
-        func_define = '%s(%s) : %s'(func_name, ', '.join(inspect.getargspec(func).args), func.description)
+        func_define = '%s(%s) : %s' % (func_name, ', '.join(inspect.getargspec(func).args), func.description)
         print('func:"%s" already registered ! %s'%(function_name, func_define))
         return
     function_class.description = description
@@ -123,7 +123,7 @@ def show_func_help(key = '', Print = False):
 
 # decode the input call string to function and parms
 def decode_call_string(call_string):
-    match_func = re.match('(?P<name>\w+)\s*\((?P<parms>.*)\)\s*$', call_string.strip())
+    match_func = re.match(r'(?P<name>\w+)\s*\((?P<parms>.*)\)\s*$', call_string.strip())
     if not match_func:
         print('Error: %s not a valid function call format ! valid call is like "function_name( parm0, parm1, ...)".'%(call_string))
         return None, []
